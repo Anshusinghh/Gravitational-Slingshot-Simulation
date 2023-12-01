@@ -38,6 +38,14 @@ class spaceCraft:
     def draw(self):
         pygame.draw.circle(screen,red,(int(self.x),int(self.y)),obj_size)
 
+def createObj(loc,mouse):
+    tx,ty=loc
+    mx,my=mouse
+    velx=(mx-tx)/vel_scale
+    vely=(my-ty)/vel_scale
+    obj=spaceCraft(tx,ty,velx,vely,ship_mass)
+    return obj
+
 def main():
     running = True
     clock=pygame.time.Clock()
@@ -58,8 +66,8 @@ def main():
 
             if event.type== pygame.MOUSEBUTTONDOWN:
                 if temp_obj_pos:
-                    tx,ty=temp_obj_pos
-                    object=spaceCraft(tx,ty,0,0,ship_mass)
+                    
+                    object=createObj(temp_obj_pos,mouse_pos)
                     Object.append(object)
                     temp_obj_pos=None
                 else:
