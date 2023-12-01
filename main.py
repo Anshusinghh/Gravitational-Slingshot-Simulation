@@ -23,6 +23,21 @@ white=(255,255,255)
 red=(255,0,0)
 blue=(0,0,255)
 
+class spaceCraft:
+    def __init__(self,x,y,velx,vely,mass):
+        self.x=x
+        self.y=y
+        self.velx=velx
+        self.vely=vely
+        self.mass=mass
+
+    def move(self,planet=None):
+        self.x += self.velx
+        self.y +=self.vely
+    
+    def draw(self):
+        pygame.draw.circle(screen,red,(int(self.x),int(self.y)),obj_size)
+
 def main():
     running = True
     clock=pygame.time.Clock()
@@ -42,14 +57,22 @@ def main():
                 running = False
 
             if event.type== pygame.MOUSEBUTTONDOWN:
-                temp_obj_pos=mouse_pos
+                if temp_obj_pos:
+                    tx,ty=temp_obj_pos
+                    object=spaceCraft(tx,ty,0,0,ship_mass)
+                    Object.append(object)
+                    temp_obj_pos=None
+                else:
+                    temp_obj_pos=mouse_pos
 
         screen.blit(bg,(0,0))
         if temp_obj_pos:
             pygame.draw.line(screen,white,temp_obj_pos,mouse_pos)
             pygame.draw.circle(screen,red,temp_obj_pos,obj_size)
             
-
+        for object in Object:
+            object.draw()
+            object.move()
         
         pygame.display.update()
     
