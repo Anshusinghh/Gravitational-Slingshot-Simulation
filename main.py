@@ -17,7 +17,7 @@ obj_size=5
 vel_scale=100
 
 bg=pygame.transform.scale(pygame.image.load("background.jpg"),(width,height))
-planet=pygame.transform.scale(pygame.image.load("background.jpg"),(planet_size*2,planet_size*2))
+planet=pygame.transform.scale(pygame.image.load("jupiter.png"),(planet_size*2,planet_size*2))
 
 white=(255,255,255)
 red=(255,0,0)
@@ -38,6 +38,15 @@ class spaceCraft:
     def draw(self):
         pygame.draw.circle(screen,red,(int(self.x),int(self.y)),obj_size)
 
+class Planet:
+    def __init__(self,x,y,mass):
+        self.x=x
+        self.y=y
+        self.mass=mass
+
+    def draw(self):
+        screen.blit(planet,(self.x-planet_size,self.y-planet_size))
+
 def createObj(loc,mouse):
     tx,ty=loc
     mx,my=mouse
@@ -52,7 +61,7 @@ def main():
 
     Object=[]
     temp_obj_pos=None
-
+    planet=Planet(width//2,height//2,planet_mass)
 
     while running:
         clock.tick(fps)
@@ -74,14 +83,21 @@ def main():
                     temp_obj_pos=mouse_pos
 
         screen.blit(bg,(0,0))
+        
         if temp_obj_pos:
             pygame.draw.line(screen,white,temp_obj_pos,mouse_pos)
             pygame.draw.circle(screen,red,temp_obj_pos,obj_size)
             
-        for object in Object:
+        for object in Object[:]:
             object.draw()
             object.move()
+
+            offscreen=object.x<0 or object.y<0 or object.x>width or object.y>height
+            collided=math.sqrt((object.x-planet.x)**2 + (object.y-planet.y)**2)<=planet_size
+            if offscreen or collided:
+                Object.remove(object)
         
+        planet.draw()
         pygame.display.update()
     
     pygame.quit()
